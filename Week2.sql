@@ -27,5 +27,33 @@ SELECT cr.Name AS Country, sp.Name AS Province FROM person.CountryRegion cr JOIN
 --Problem 13
 SELECT cr.Name AS Country, sp.Name AS Province FROM person.CountryRegion cr JOIN person.StateProvince sp ON cr.CountryRegionCode = sp.CountryRegionCode WHERE cr.Name IN ('Germany', 'Canada');
 --Problem 14
-
+USE Northwind
+Go
+SELECT DISTINCT p.ProductID, p.ProductName FROM Products p JOIN [Order Details] od ON p.ProductID = od.ProductID JOIN Orders o ON od.OrderID = o.OrderID WHERE o.OrderDate >= '1997-06-20';
 --Problem 15
+SELECT TOP 5 c.PostalCode, COUNT(od.ProductID) AS ProductsSold
+FROM Orders o
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+JOIN Customers c ON o.CustomerID = c.CustomerID
+GROUP BY c.PostalCode
+ORDER BY ProductsSold DESC;
+--Problem 16
+SELECT TOP 5 c.PostalCode, COUNT(od.ProductID) AS ProductsSold
+FROM Orders o
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+JOIN Customers c ON o.CustomerID = c.CustomerID
+WHERE o.OrderDate >= '1997-06-20'
+GROUP BY c.PostalCode
+ORDER BY ProductsSold DESC;
+--Problem 17
+SELECT c.City, COUNT(c.CustomerID) AS NumberOfCustomers FROM Customers c GROUP BY c.City;
+--Problem 18
+SELECT c.City, COUNT(c.CustomerID) AS NumberOfCustomers FROM Customers c GROUP BY c.City
+HAVING COUNT(c.CustomerID) > 2;
+--Problem 19
+SELECT c.ContactName, o.OrderDate FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID
+WHERE o.OrderDate > '1998-01-01';
+--Problem 20
+SELECT c.ContactName, MAX(o.OrderDate) AS MostRecentOrderDate FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID
+GROUP BY c.ContactName;
+--Problem 21
