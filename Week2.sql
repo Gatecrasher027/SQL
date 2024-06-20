@@ -57,3 +57,16 @@ WHERE o.OrderDate > '1998-01-01';
 SELECT c.ContactName, MAX(o.OrderDate) AS MostRecentOrderDate FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID
 GROUP BY c.ContactName;
 --Problem 21
+SELECT c.ContactName, COUNT(od.ProductID) AS ProductsBought FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+GROUP BY c.ContactName;
+--Problem 22
+SELECT c.CustomerID, COUNT(od.ProductID) AS ProductsBought FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID JOIN [Order Details] od ON o.OrderID = od.OrderID
+GROUP BY c.CustomerID HAVING COUNT(od.ProductID) > 100;
+--Problem 23
+--Problem 24
+SELECT o.OrderDate, p.ProductName FROM Orders o JOIN [Order Details] od ON o.OrderID = od.OrderID JOIN Products p ON od.ProductID = p.ProductID
+ORDER BY o.OrderDate, p.ProductName;
+--Problem 25
+SELECT e1.EmployeeID AS Employee1ID, e1.FirstName + ' ' + e1.LastName AS Employee1Name, e2.EmployeeID AS Employee2ID, e2.FirstName + ' ' + e2.LastName AS Employee2Name
+FROM Employees e1 JOIN Employees e2 ON e1.Title = e2.Title AND e1.EmployeeID < e2.EmployeeID;
