@@ -25,3 +25,17 @@ SELECT tp.ProductID, tp.AvgPrice, c.City AS CustomerCity, MAX(od.Quantity) AS Mo
 JOIN Orders o ON od.OrderID = o.OrderID JOIN Customers c ON o.CustomerID = c.CustomerID
 GROUP BY tp.ProductID, tp.AvgPrice, c.City
 ORDER BY tp.ProductID;
+--Problem 9(a)
+SELECT DISTINCT e.City FROM Employees e WHERE e.City NOT IN (SELECT DISTINCT o.ShipCity FROM Orders o);
+--Problem 9(b)
+SELECT DISTINCT e.City FROM Employees e LEFT JOIN Orders o ON e.City = o.ShipCity WHERE o.ShipCity IS NULL;
+--Problem 10
+WITH TopEmpCity AS (SELECT TOP 1 e.City, COUNT(o.OrderID) AS OrderCount FROM Employees e JOIN Orders o ON e.EmployeeID = o.EmployeeID
+GROUP BY e.City ORDER BY COUNT(o.OrderID) DESC), TopCustCity AS (SELECT TOP 1 c.City, SUM(od.Quantity) AS TotalQuantity FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID JOIN [Order Details] od ON o.OrderID = od.OrderID GROUP BY c.City ORDER BY SUM(od.Quantity) DESC)
+SELECT tec.City FROM TopEmpCity tec JOIN TopCustCity tcc ON tec.City = tcc.City;
+--Problem 11
+--To remove duplicate records from a table, we can use Common Table Expression and partition the table. It assigns a row number to each row within partitions defined by specific columns. 
+--The DELETE statement then removes rows where the row number is greater than 1, deleting the duplicate rows.
+WITH CTE AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY col1, col2, ... ORDER BY ID) AS RowNum FROM Employees) DELETE FROM CTE
+WHERE RowNum > 1;
