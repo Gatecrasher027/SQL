@@ -16,4 +16,12 @@ SELECT City FROM (SELECT City, COUNT(CustomerID) AS CustomerCount FROM Customers
 SELECT c.City FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID JOIN [Order Details] od ON o.OrderID = od.OrderID GROUP BY c.City
 HAVING COUNT(DISTINCT od.ProductID) >= 2;
 --Problem 7
-
+SELECT c.CustomerID, c.CompanyName, c.City AS CustomerCity, o.ShipCity FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID
+WHERE c.City <> o.ShipCity;
+--Problem 8
+WITH ProductPopularity AS (SELECT od.ProductID, SUM(od.Quantity) AS TotalQuantity, AVG(od.UnitPrice) AS AvgPrice FROM [Order Details] od GROUP BY od.ProductID
+), TopProducts AS (SELECT TOP 5 ProductID, TotalQuantity, AvgPrice FROM ProductPopularity ORDER BY TotalQuantity DESC)
+SELECT tp.ProductID, tp.AvgPrice, c.City AS CustomerCity, MAX(od.Quantity) AS MostOrdQty FROM TopProducts tp JOIN [Order Details] od ON tp.ProductID = od.ProductID
+JOIN Orders o ON od.OrderID = o.OrderID JOIN Customers c ON o.CustomerID = c.CustomerID
+GROUP BY tp.ProductID, tp.AvgPrice, c.City
+ORDER BY tp.ProductID;
